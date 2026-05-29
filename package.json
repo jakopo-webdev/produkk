@@ -1,0 +1,12 @@
+{
+  "name": "produkk",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n api,ui -c cyan,magenta \"npm run dev:api\" \"npm run dev:ui\"",
+    "dev:api": "npm --prefix produkk-api run start:dev",
+    "dev:ui": "npm --prefix produkk-ui run start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}

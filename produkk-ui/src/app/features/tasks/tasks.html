@@ -1,0 +1,320 @@
+<div class="min-h-screen bg-gray-950">
+
+  <app-navbar />
+
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+
+    <!-- Page Header -->
+    <div class="flex items-center justify-between mb-20">
+      <div>
+        <h1 class="text-4xl font-bold text-white">My Tasks</h1>
+      </div>
+      <button
+        (click)="openAddModal()"
+        class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-4 py-2.5 rounded-xl transition-colors text-sm shadow-lg shadow-indigo-600/20"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+        New Task
+      </button>
+    </div>
+
+    <!-- Loading Skeleton -->
+    @if (loading()) {
+      <div class="flex flex-col gap-3">
+        @for (s of [1, 2, 3]; track s) {
+          <div class="bg-gray-900 border border-gray-800 rounded-2xl h-20 animate-pulse"></div>
+        }
+      </div>
+    <!-- Empty State -->
+    } @else if (filteredTasks().length === 0) {
+      <div class="flex flex-col items-center justify-center py-20 text-center">
+          <div class="w-16 h-16 bg-gray-900 border border-gray-800 rounded-2xl flex items-center justify-center mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-gray-600" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+            </svg>
+          </div>
+          <p class="text-gray-300 font-semibold mb-1">
+            @if (filter() === 'all') { No tasks yet }
+            @else if (filter() === 'to-do') { No to-do tasks }
+            @else if (filter() === 'active') { No active tasks }
+            @else { No completed tasks }
+          </p>
+          <p class="text-gray-600 text-sm">
+            @if (filter() === 'all') { Click "New Task" to get started }
+            @else if (filter() === 'to-do') { Create tasks to get started }
+            @else if (filter() === 'active') { All your active tasks are done — great work! }
+            @else { Complete a task to see it here }
+          </p>
+      </div>
+    <!-- Task List -->
+    } @else {
+      <div class="flex flex-col gap-10">
+        <!-- To-do Row -->
+        <div>
+          <h3 class="text-xl font-semibold text-amber-400 uppercase mb-3 flex items-center justify-between">
+            <span>To-do</span>
+          </h3>
+          <ul class="flex flex-col gap-2">
+              @for (task of tasks().filter(t => t.status === 'to-do'); track task.id) {
+              <li class="bg-gray-900 border border-gray-800 hover:border-gray-700 rounded-2xl px-4 py-3 flex items-center gap-3 group relative">
+                <div class="flex-1 min-w-0">
+                  <p class="text-base font-semibold text-white truncate">{{ task.title }}</p>
+                  @if (task.description) { <p class="text-sm text-gray-400 mt-0.5 truncate">{{ task.description }}</p> }
+                </div>
+                <div class="flex flex-col items-end gap-1 shrink-0">
+                  <button (click)="openStatusMenu(task.id)" title="Change status" class="px-3 py-1 rounded-full text-sm bg-amber-500 text-white font-semibold shadow-sm">
+                    {{ task.status }}
+                  </button>
+                  @if (statusMenuId() === task.id) {
+                    <div class="mt-1 bg-gray-800 border border-gray-700 rounded-lg p-2 w-44 text-sm shadow-xl">
+                      <button (click)="updateStatus(task, 'to-do')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition">
+                        <span class="w-2 h-2 rounded-full bg-amber-400 inline-block"></span>
+                        <span class="flex-1 text-white">To-do</span>
+                      </button>
+                      <button (click)="updateStatus(task, 'active')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition mt-1">
+                        <span class="w-2 h-2 rounded-full bg-blue-400 inline-block"></span>
+                        <span class="flex-1 text-white">Active</span>
+                      </button>
+                      <button (click)="updateStatus(task, 'completed')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition mt-1">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
+                        <span class="flex-1 text-white">Completed</span>
+                      </button>
+                    </div>
+                  }
+                </div>
+                <div class="absolute top-3 right-36 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition">
+                  <button (click)="editTask(task)" title="Edit" class="p-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-200">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 20h9" stroke-linecap="round" stroke-linejoin="round"></path>
+                      <path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4 12.5-12.5z" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                  </button>
+                  <button (click)="confirmDelete(task)" title="Delete" class="p-1.5 rounded-lg bg-gray-800 hover:bg-red-700 text-red-400">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="3 6 5 6 21 6" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                      <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" stroke-linecap="round" stroke-linejoin="round"></path>
+                      <path d="M10 11v6" stroke-linecap="round" stroke-linejoin="round"></path>
+                      <path d="M14 11v6" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                  </button>
+                </div>
+              </li>
+            }
+          </ul>
+        </div>
+
+        <!-- Active Row -->
+        <div>
+          <h3 class="text-xl font-semibold text-blue-400 uppercase mb-3 flex items-center justify-between">
+            <span>Active</span>
+          </h3>
+          <ul class="flex flex-col gap-2">
+            @for (task of tasks().filter(t => t.status === 'active'); track task.id) {
+              <li class="bg-gray-900 border border-gray-800 hover:border-gray-700 rounded-2xl px-4 py-3 flex items-center gap-3 group relative">
+                <div class="flex-1 min-w-0">
+                  <p class="text-base font-semibold text-white truncate">{{ task.title }}</p>
+                  @if (task.description) { <p class="text-sm text-gray-400 mt-0.5 truncate">{{ task.description }}</p> }
+                </div>
+                <div class="flex flex-col items-end gap-1 shrink-0">
+                  <button (click)="openStatusMenu(task.id)" title="Change status" class="px-3 py-1 rounded-full text-sm bg-blue-500 text-white font-semibold shadow-sm">
+                    {{ task.status }}
+                  </button>
+                  @if (statusMenuId() === task.id) {
+                    <div class="mt-1 bg-gray-800 border border-gray-700 rounded-lg p-2 w-44 text-sm shadow-xl">
+                      <button (click)="updateStatus(task, 'to-do')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition">
+                        <span class="w-2 h-2 rounded-full bg-amber-400 inline-block"></span>
+                        <span class="flex-1 text-white">To-do</span>
+                      </button>
+                      <button (click)="updateStatus(task, 'active')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition mt-1">
+                        <span class="w-2 h-2 rounded-full bg-blue-400 inline-block"></span>
+                        <span class="flex-1 text-white">Active</span>
+                      </button>
+                      <button (click)="updateStatus(task, 'completed')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition mt-1">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
+                        <span class="flex-1 text-white">Completed</span>
+                      </button>
+                    </div>
+                  }
+                </div>
+                                <div class="absolute top-3 right-36 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition">
+                  <button (click)="editTask(task)" title="Edit" class="p-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-200">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 20h9" stroke-linecap="round" stroke-linejoin="round"></path>
+                      <path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4 12.5-12.5z" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                  </button>
+                  <button (click)="confirmDelete(task)" title="Delete" class="p-1.5 rounded-lg bg-gray-800 hover:bg-red-700 text-red-400">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="3 6 5 6 21 6" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                      <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" stroke-linecap="round" stroke-linejoin="round"></path>
+                      <path d="M10 11v6" stroke-linecap="round" stroke-linejoin="round"></path>
+                      <path d="M14 11v6" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                  </button>
+                </div>
+              </li>
+            }
+          </ul>
+        </div>
+
+        <!-- Completed Row -->
+        <div>
+          <h3 class="text-xl font-semibold text-emerald-400 uppercase mb-3 flex items-center justify-between">
+            <span>Completed</span>
+          </h3>
+          <ul class="flex flex-col gap-2">
+            @for (task of tasks().filter(t => t.status === 'completed'); track task.id) {
+              <li class="bg-gray-900 border border-gray-800 hover:border-gray-700 rounded-2xl px-4 py-3 flex items-center gap-3 group relative">
+                <div class="flex-1 min-w-0">
+                  <p class="text-base font-semibold text-white truncate">{{ task.title }}</p>
+                  @if (task.description) { <p class="text-sm text-gray-400 mt-0.5 truncate">{{ task.description }}</p> }                </div>
+                <div class="flex flex-col items-end gap-1 shrink-0">
+                  <button (click)="openStatusMenu(task.id)" title="Change status" class="px-3 py-1 rounded-full text-sm bg-emerald-500 text-white font-semibold shadow-sm">
+                    {{ task.status }}
+                  </button>
+                  @if (statusMenuId() === task.id) {
+                    <div class="mt-1 bg-gray-800 border border-gray-700 rounded-lg p-2 w-44 text-sm shadow-xl">
+                      <button (click)="updateStatus(task, 'to-do')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition">
+                        <span class="w-2 h-2 rounded-full bg-amber-400 inline-block"></span>
+                        <span class="flex-1 text-white">To-do</span>
+                      </button>
+                      <button (click)="updateStatus(task, 'active')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition mt-1">
+                        <span class="w-2 h-2 rounded-full bg-blue-400 inline-block"></span>
+                        <span class="flex-1 text-white">Active</span>
+                      </button>
+                      <button (click)="updateStatus(task, 'completed')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition mt-1">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
+                        <span class="flex-1 text-white">Completed</span>
+                      </button>
+                    </div>
+                  }
+                </div>
+                <div class="absolute top-3 right-36 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition">
+                  <button (click)="editTask(task)" title="Edit" class="p-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-200">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 20h9" stroke-linecap="round" stroke-linejoin="round"></path>
+                      <path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4 12.5-12.5z" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                  </button>
+                  <button (click)="confirmDelete(task)" title="Delete" class="p-1.5 rounded-lg bg-gray-800 hover:bg-red-700 text-red-400">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="3 6 5 6 21 6" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                      <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" stroke-linecap="round" stroke-linejoin="round"></path>
+                      <path d="M10 11v6" stroke-linecap="round" stroke-linejoin="round"></path>
+                      <path d="M14 11v6" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                  </button>
+                </div>
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+    }
+  </main>
+
+  <!-- Task Modal -->
+  @if (showModal()) {
+    <div
+      class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+      (click)="closeModal()"
+    >
+      <div
+        class="bg-gray-900 border border-gray-800 rounded-2xl p-6 w-full max-w-md shadow-2xl shadow-black/60"
+        (click)="$event.stopPropagation()"
+      >
+        <!-- Modal header -->
+        <div class="flex items-center justify-between mb-5">
+          <h2 class="text-white font-bold text-lg">
+            {{ editingTask() ? 'Edit Task' : 'New Task' }}
+          </h2>
+          <button
+            (click)="closeModal()"
+            class="text-gray-500 hover:text-gray-300 p-1.5 rounded-lg hover:bg-gray-800 transition"
+          >
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Modal error -->
+        @if (modalError()) {
+          <div class="mb-4 flex items-center gap-2.5 bg-red-500/10 border border-red-500/30 text-red-400 rounded-xl px-4 py-3 text-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            {{ modalError() }}
+          </div>
+        }
+
+        <form [formGroup]="taskForm" (ngSubmit)="saveTask()">
+          <!-- Title -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-300 mb-1.5">
+              Title <span class="text-red-500">*</span>
+            </label>
+            <input
+              formControlName="title"
+              type="text"
+              placeholder="What needs to be done?"
+              class="w-full bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50 transition"
+              [class.border-red-500]="titleCtrl.invalid && titleCtrl.touched"
+            />
+            @if (titleCtrl.touched && titleCtrl.errors?.['required']) {
+              <p class="mt-1.5 text-xs text-red-400">Title is required.</p>
+            }
+          </div>
+
+          <!-- Description -->
+          <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-300 mb-1.5">
+              Description <span class="text-gray-600 font-normal">— optional</span>
+            </label>
+            <textarea
+              formControlName="description"
+              placeholder="Add some details…"
+              rows="3"
+              class="w-full bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50 transition resize-none"
+            ></textarea>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex gap-3 justify-end">
+            <button
+              type="button"
+              (click)="closeModal()"
+              class="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 rounded-xl transition"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              [disabled]="savingTask()"
+              class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold px-5 py-2 rounded-xl transition-colors text-sm"
+            >
+              @if (savingTask()) {
+                <svg class="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                </svg>
+                Saving…
+              } @else {
+                {{ editingTask() ? 'Save Changes' : 'Create Task' }}
+              }
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  }
+
+</div>
