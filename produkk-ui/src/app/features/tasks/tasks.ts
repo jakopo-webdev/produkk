@@ -16,8 +16,8 @@ type FilterType = 'all' | 'to-do' | 'active' | 'completed';
 })
 export class TasksComponent implements OnInit {
   private tasksService = inject(TasksService);
-  private auth = inject(AuthService);
   private fb = inject(FormBuilder);
+  auth = inject(AuthService);
 
   tasks = signal<Task[]>([]);
   loading = signal(true);

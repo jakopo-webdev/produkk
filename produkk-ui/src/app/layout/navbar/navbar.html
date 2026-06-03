@@ -9,9 +9,6 @@
 
     <!-- User + Logout -->
     <div class="flex items-center gap-3">
-      @if (auth.currentUser()) {
-        <span class="text-gray-500 text-sm hidden sm:block">{{ auth.currentUser()!.username }}</span>
-      }
       <button
         (click)="auth.logout()"
         class="flex items-center gap-1.5 text-gray-400 hover:text-white hover:bg-gray-800 text-sm font-medium px-3 py-1.5 rounded-lg transition-all"
