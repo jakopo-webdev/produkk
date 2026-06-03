@@ -66,42 +66,44 @@
                   <p class="text-base font-semibold text-white truncate">{{ task.title }}</p>
                   @if (task.description) { <p class="text-sm text-gray-400 mt-0.5 truncate">{{ task.description }}</p> }
                 </div>
-                <div class="flex flex-col items-end gap-1 shrink-0">
-                  <button (click)="openStatusMenu(task.id)" title="Change status" class="px-3 py-1 rounded-full text-sm bg-amber-500 text-white font-semibold shadow-sm">
-                    {{ task.status }}
-                  </button>
-                  @if (statusMenuId() === task.id) {
-                    <div class="absolute z-50 right-4 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg p-2 w-44 text-sm shadow-xl">
-                      <button (click)="updateStatus(task, 'to-do')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition">
-                        <span class="w-2 h-2 rounded-full bg-amber-400 inline-block"></span>
-                        <span class="flex-1 text-white">To-do</span>
-                      </button>
-                      <button (click)="updateStatus(task, 'active')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition mt-1">
-                        <span class="w-2 h-2 rounded-full bg-blue-400 inline-block"></span>
-                        <span class="flex-1 text-white">Active</span>
-                      </button>
-                      <button (click)="updateStatus(task, 'completed')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition mt-1">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
-                        <span class="flex-1 text-white">Completed</span>
-                      </button>
-                    </div>
-                  }
-                </div>
-                <div class="absolute top-3 right-36 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition">
-                  <button (click)="editTask(task)" title="Edit" class="p-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-200">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M12 20h9" stroke-linecap="round" stroke-linejoin="round"></path>
-                      <path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4 12.5-12.5z" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
-                  </button>
-                  <button (click)="confirmDelete(task)" title="Delete" class="p-1.5 rounded-lg bg-gray-800 hover:bg-red-700 text-red-400">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="3 6 5 6 21 6" stroke-linecap="round" stroke-linejoin="round"></polyline>
-                      <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" stroke-linecap="round" stroke-linejoin="round"></path>
-                      <path d="M10 11v6" stroke-linecap="round" stroke-linejoin="round"></path>
-                      <path d="M14 11v6" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
-                  </button>
+                <div class="flex items-center gap-4 shrink-0">
+                  <div class="relative">
+                    <button (click)="openStatusMenu(task.id)" title="Change status" class="px-3 py-1 rounded-full text-sm bg-amber-500 text-white font-semibold shadow-sm">
+                      {{ task.status }}
+                    </button>
+                    @if (statusMenuId() === task.id) {
+                      <div class="absolute z-50 right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg p-2 w-44 text-sm shadow-xl">
+                        <button (click)="updateStatus(task, 'to-do')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition">
+                          <span class="w-2 h-2 rounded-full bg-amber-400 inline-block"></span>
+                          <span class="flex-1 text-white">To-do</span>
+                        </button>
+                        <button (click)="updateStatus(task, 'active')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition mt-1">
+                          <span class="w-2 h-2 rounded-full bg-blue-400 inline-block"></span>
+                          <span class="flex-1 text-white">Active</span>
+                        </button>
+                        <button (click)="updateStatus(task, 'completed')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition mt-1">
+                          <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
+                          <span class="flex-1 text-white">Completed</span>
+                        </button>
+                      </div>
+                    }
+                  </div>
+                  <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition">
+                    <button (click)="editTask(task)" title="Edit" class="p-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-200">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20h9" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4 12.5-12.5z" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </button>
+                    <button (click)="confirmDelete(task)" title="Delete" class="p-1.5 rounded-lg bg-gray-800 hover:bg-red-700 text-red-400">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                        <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M10 11v6" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M14 11v6" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </li>
             }
@@ -120,42 +122,44 @@
                   <p class="text-base font-semibold text-white truncate">{{ task.title }}</p>
                   @if (task.description) { <p class="text-sm text-gray-400 mt-0.5 truncate">{{ task.description }}</p> }
                 </div>
-                <div class="flex flex-col items-end gap-1 shrink-0">
-                  <button (click)="openStatusMenu(task.id)" title="Change status" class="px-3 py-1 rounded-full text-sm bg-blue-500 text-white font-semibold shadow-sm">
-                    {{ task.status }}
-                  </button>
-                  @if (statusMenuId() === task.id) {
-                    <div class="absolute z-50 right-4 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg p-2 w-44 text-sm shadow-xl">
-                      <button (click)="updateStatus(task, 'to-do')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition">
-                        <span class="w-2 h-2 rounded-full bg-amber-400 inline-block"></span>
-                        <span class="flex-1 text-white">To-do</span>
-                      </button>
-                      <button (click)="updateStatus(task, 'active')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition mt-1">
-                        <span class="w-2 h-2 rounded-full bg-blue-400 inline-block"></span>
-                        <span class="flex-1 text-white">Active</span>
-                      </button>
-                      <button (click)="updateStatus(task, 'completed')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition mt-1">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
-                        <span class="flex-1 text-white">Completed</span>
-                      </button>
-                    </div>
-                  }
-                </div>
-                <div class="absolute top-3 right-36 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition">
-                  <button (click)="editTask(task)" title="Edit" class="p-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-200">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M12 20h9" stroke-linecap="round" stroke-linejoin="round"></path>
-                      <path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4 12.5-12.5z" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
-                  </button>
-                  <button (click)="confirmDelete(task)" title="Delete" class="p-1.5 rounded-lg bg-gray-800 hover:bg-red-700 text-red-400">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="3 6 5 6 21 6" stroke-linecap="round" stroke-linejoin="round"></polyline>
-                      <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" stroke-linecap="round" stroke-linejoin="round"></path>
-                      <path d="M10 11v6" stroke-linecap="round" stroke-linejoin="round"></path>
-                      <path d="M14 11v6" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
-                  </button>
+                <div class="flex items-center gap-4 shrink-0">
+                  <div class="relative">
+                    <button (click)="openStatusMenu(task.id)" title="Change status" class="px-3 py-1 rounded-full text-sm bg-blue-500 text-white font-semibold shadow-sm">
+                      {{ task.status }}
+                    </button>
+                    @if (statusMenuId() === task.id) {
+                      <div class="absolute z-50 right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg p-2 w-44 text-sm shadow-xl">
+                        <button (click)="updateStatus(task, 'to-do')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition">
+                          <span class="w-2 h-2 rounded-full bg-amber-400 inline-block"></span>
+                          <span class="flex-1 text-white">To-do</span>
+                        </button>
+                        <button (click)="updateStatus(task, 'active')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition mt-1">
+                          <span class="w-2 h-2 rounded-full bg-blue-400 inline-block"></span>
+                          <span class="flex-1 text-white">Active</span>
+                        </button>
+                        <button (click)="updateStatus(task, 'completed')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition mt-1">
+                          <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
+                          <span class="flex-1 text-white">Completed</span>
+                        </button>
+                      </div>
+                    }
+                  </div>
+                  <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition">
+                    <button (click)="editTask(task)" title="Edit" class="p-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-200">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20h9" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4 12.5-12.5z" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </button>
+                    <button (click)="confirmDelete(task)" title="Delete" class="p-1.5 rounded-lg bg-gray-800 hover:bg-red-700 text-red-400">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                        <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M10 11v6" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M14 11v6" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </li>
             }
@@ -173,42 +177,44 @@
                 <div class="flex-1 min-w-0">
                   <p class="text-base font-semibold text-white truncate">{{ task.title }}</p>
                   @if (task.description) { <p class="text-sm text-gray-400 mt-0.5 truncate">{{ task.description }}</p> }                </div>
-                <div class="flex flex-col items-end gap-1 shrink-0">
-                  <button (click)="openStatusMenu(task.id)" title="Change status" class="px-3 py-1 rounded-full text-sm bg-emerald-500 text-white font-semibold shadow-sm">
-                    {{ task.status }}
-                  </button>
-                  @if (statusMenuId() === task.id) {
-                    <div class="absolute z-50 right-4 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg p-2 w-44 text-sm shadow-xl">
-                      <button (click)="updateStatus(task, 'to-do')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition">
-                        <span class="w-2 h-2 rounded-full bg-amber-400 inline-block"></span>
-                        <span class="flex-1 text-white">To-do</span>
-                      </button>
-                      <button (click)="updateStatus(task, 'active')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition mt-1">
-                        <span class="w-2 h-2 rounded-full bg-blue-400 inline-block"></span>
-                        <span class="flex-1 text-white">Active</span>
-                      </button>
-                      <button (click)="updateStatus(task, 'completed')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition mt-1">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
-                        <span class="flex-1 text-white">Completed</span>
-                      </button>
-                    </div>
-                  }
-                </div>
-                <div class="absolute top-3 right-36 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition">
-                  <button (click)="editTask(task)" title="Edit" class="p-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-200">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M12 20h9" stroke-linecap="round" stroke-linejoin="round"></path>
-                      <path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4 12.5-12.5z" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
-                  </button>
-                  <button (click)="confirmDelete(task)" title="Delete" class="p-1.5 rounded-lg bg-gray-800 hover:bg-red-700 text-red-400">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="3 6 5 6 21 6" stroke-linecap="round" stroke-linejoin="round"></polyline>
-                      <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" stroke-linecap="round" stroke-linejoin="round"></path>
-                      <path d="M10 11v6" stroke-linecap="round" stroke-linejoin="round"></path>
-                      <path d="M14 11v6" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
-                  </button>
+                <div class="flex items-center gap-4 shrink-0">
+                  <div class="relative">
+                    <button (click)="openStatusMenu(task.id)" title="Change status" class="px-3 py-1 rounded-full text-sm bg-emerald-500 text-white font-semibold shadow-sm">
+                      {{ task.status }}
+                    </button>
+                    @if (statusMenuId() === task.id) {
+                      <div class="absolute z-50 right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg p-2 w-44 text-sm shadow-xl">
+                        <button (click)="updateStatus(task, 'to-do')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition">
+                          <span class="w-2 h-2 rounded-full bg-amber-400 inline-block"></span>
+                          <span class="flex-1 text-white">To-do</span>
+                        </button>
+                        <button (click)="updateStatus(task, 'active')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition mt-1">
+                          <span class="w-2 h-2 rounded-full bg-blue-400 inline-block"></span>
+                          <span class="flex-1 text-white">Active</span>
+                        </button>
+                        <button (click)="updateStatus(task, 'completed')" [disabled]="statusChangingId() === task.id" class="w-full text-left px-2 py-1 flex items-center gap-2 text-sm hover:bg-gray-700 rounded transition mt-1">
+                          <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
+                          <span class="flex-1 text-white">Completed</span>
+                        </button>
+                      </div>
+                    }
+                  </div>
+                  <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition">
+                    <button (click)="editTask(task)" title="Edit" class="p-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-200">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20h9" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4 12.5-12.5z" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </button>
+                    <button (click)="confirmDelete(task)" title="Delete" class="p-1.5 rounded-lg bg-gray-800 hover:bg-red-700 text-red-400">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                        <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M10 11v6" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M14 11v6" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </li>
             }
