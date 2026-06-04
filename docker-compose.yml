@@ -2,10 +2,8 @@ version: "3.8"
 services:
   db:
     image: postgres:15
-    environment:
-      POSTGRES_USER: vexay
-      POSTGRES_PASSWORD: vexaypassw
-      POSTGRES_DB: produkk
+    env_file:
+      - ./produkk-api/.env
     volumes:
       - db-data:/var/lib/postgresql/data
     ports:
@@ -14,12 +12,8 @@ services:
   api:
     build:
       context: ./produkk-api
-    environment:
-      DATABASE_URL: postgresql://vexay:vexaypassw@db:5432/produkk
-      NODE_ENV: production
-      JWT_SECRET: 288f35c7c8626da74e7f763171b28ea7
-      JWT_EXPIRES_IN: 7d
-      PORT: 3009
+    env_file:
+      - ./produkk-api/.env
     ports:
       - "3009:3009"
     depends_on:
