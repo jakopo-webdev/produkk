@@ -1,11 +1,11 @@
 {
   "/auth": {
-    "target": "http://api:3000",
+    "target": "http://api:3009",
     "secure": false,
     "changeOrigin": true
   },
   "/tasks": {
-    "target": "http://api:3000",
+    "target": "http://api:3009",
     "secure": false,
     "changeOrigin": true
   }

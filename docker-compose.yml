@@ -19,9 +19,9 @@ services:
       NODE_ENV: production
       JWT_SECRET: 288f35c7c8626da74e7f763171b28ea7
       JWT_EXPIRES_IN: 7d
-      PORT: 3000
+      PORT: 3009
     ports:
-      - "3000:3000"
+      - "3009:3009"
     depends_on:
       - db
     restart: unless-stopped
@@ -30,7 +30,7 @@ services:
     build:
       context: ./produkk-ui
     ports:
-      - "4200:4200"
+      - "4209:4209"
     environment:
       CHOKIDAR_USEPOLLING: "true"
     depends_on:

@@ -48,7 +48,7 @@ Create a `.env` file inside `produkk-api/` (copy the template below):
 DATABASE_URL=postgresql://<user>:<password>@localhost:5432/produkk
 JWT_SECRET=<your-random-secret>
 JWT_EXPIRES_IN=7d
-PORT=3000
+PORT=3009
 ```
 
 > **Tip:** Generate a strong `JWT_SECRET` with `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`.
@@ -70,8 +70,8 @@ npm run dev
 
 | Service | URL                    |
 |---------|------------------------|
-| API     | http://localhost:3000  |
-| UI      | http://localhost:4200  |
+| API     | http://localhost:3009  |
+| UI      | http://localhost:4209  |
 
 Or run them individually:
 
