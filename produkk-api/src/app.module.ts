@@ -12,12 +12,21 @@ import { TasksModule } from './tasks/tasks.module';
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        type: 'postgres',
-        url: config.get<string>('DATABASE_URL'),
-        autoLoadEntities: true,
-        synchronize: true,
-      }),
+      useFactory: (config: ConfigService) => {
+        const nodeEnv = config.get<string>('NODE_ENV') || '';
+        const host = nodeEnv.startsWith('prod') ? 'db' : 'localhost';
+        const user = config.get<string>('POSTGRES_USER') || 'username';
+        const pass = config.get<string>('POSTGRES_PASSWORD') || 'password';
+        const db = config.get<string>('POSTGRES_DB') || 'produkk';
+        const url = `postgresql://${user}:${pass}@${host}:5432/${db}`;
+
+        return {
+          type: 'postgres',
+          url,
+          autoLoadEntities: true,
+          synchronize: true,
+        };
+      },
     }),
     UsersModule,
     AuthModule,
