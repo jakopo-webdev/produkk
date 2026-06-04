@@ -16,9 +16,10 @@ A full-stack task management application built with **NestJS** (API) and **Angul
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) v20+
-- [npm](https://www.npmjs.com/) v10+
-- [PostgreSQL](https://www.postgresql.org/) v14+
+- Node.js v20+
+- npm v10+
+- PostgreSQL v14+
+- (Optional) Docker (https://www.docker.com/)
 
 ---
 
@@ -34,7 +35,7 @@ cd produkk
 ### 2. Install all dependencies
 
 ```bash
-npm install          # installs concurrently at the root
+npm install          # installs root tooling (e.g. concurrently)
 cd produkk-api && npm install
 cd ../produkk-ui && npm install
 cd ..
@@ -42,22 +43,17 @@ cd ..
 
 ### 3. Configure the API environment
 
-Create a `.env` file inside `produkk-api/` (copy the template below):
+Create a `.env` file inside `produkk-api/` (copy the template in `.env.example`).
 
-```env
-DATABASE_URL=postgresql://<user>:<password>@localhost:5432/produkk
-JWT_SECRET=<your-random-secret>
-JWT_EXPIRES_IN=7d
-PORT=3009
+Tip: set `DATABASE_HOST=localhost` for local development and `DATABASE_HOST=db` when running in Docker. Generate a strong `JWT_SECRET` with:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
-
-> **Tip:** Generate a strong `JWT_SECRET` with `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`.
 
 ### 4. Create the database
 
-```bash
-psql -U postgres -c "CREATE DATABASE produkk;"
-```
+You can use tools like pgAdmin4 or use the Docker PostgreSQL image (the service is already present in docker-compose.yml, so you can use that too)
 
 The schema is managed by TypeORM and will be auto-created on first run (`synchronize: true` in development).
 
@@ -113,6 +109,18 @@ produkk/
 ## API Overview
 
 Full API documentation is available in [`produkk-api/API.md`](produkk-api/API.md).
+
+---
+
+## Optional: Run with Docker
+
+To run the application with Docker, ensure set `NODE_ENV=production`, then:
+
+```bash
+docker compose up --build
+```
+
+Note: For local development the API should connect to `localhost`; inside Docker the database host is typically `db`. See `produkk-api/.env.example` for details.
 
 ---
 
