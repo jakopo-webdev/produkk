@@ -34,17 +34,25 @@ export class LoginComponent {
     this.auth.login(username, password).subscribe({
       next: () => {
         this.auth.getProfile().subscribe({
-          next: () => this.router.navigate(['/']),
-          error: () => this.router.navigate(['/']),
+          next: () => {
+            this.loading.set(false);
+            this.router.navigate(['/']);
+          },
+          error: () => {
+            this.loading.set(false);
+            this.router.navigate(['/']);
+          },
         });
       },
       error: (err: HttpErrorResponse) => {
         this.loading.set(false);
-        this.error.set(
-          err.status === 401
-            ? 'Invalid username or password.'
-            : 'Something went wrong. Please try again.',
-        );
+        if (err.status === 401) {
+          this.error.set('Invalid username or password.');
+        } else if (err.status === 429) {
+          this.error.set(err.error?.message || 'Too many requests. Try again later.');
+        } else {
+          this.error.set('Something went wrong. Please try again.');
+        }
       },
     });
   }
