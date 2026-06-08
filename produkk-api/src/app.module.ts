@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { TasksModule } from './tasks/tasks.module';
+import { RedisModule } from '@nestjs-modules/ioredis';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -31,6 +32,19 @@ import { TasksModule } from './tasks/tasks.module';
     UsersModule,
     AuthModule,
     TasksModule,
+    RedisModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (cfg: ConfigService) => {
+        const nodeEnv = cfg.get<string>('NODE_ENV') || '';
+        const host = cfg.get<string>('REDIS_HOST') || (nodeEnv.startsWith('prod') ? 'redis' : 'localhost');
+        const port = Number(cfg.get<number>('REDIS_PORT') || 6379);
+
+        return {
+          type: 'single',
+          url: `redis://${host}:${port}`,
+        };
+      },
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
