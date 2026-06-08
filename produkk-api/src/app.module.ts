@@ -36,7 +36,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService],
       useFactory: (cfg: ConfigService) => {
         const nodeEnv = cfg.get<string>('NODE_ENV') || '';
-        const host = cfg.get<string>('REDIS_HOST') || (nodeEnv.startsWith('prod') ? 'redis' : 'localhost');
+        const host = nodeEnv.startsWith('prod') ? 'redis' : 'localhost';
         const port = Number(cfg.get<number>('REDIS_PORT') || 6379);
 
         return {
