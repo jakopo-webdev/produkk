@@ -20,6 +20,7 @@ A full-stack task management application built with **NestJS** (API) and **Angul
 - npm v10+
 - PostgreSQL v14+
 - (Optional) Docker (https://www.docker.com/)
+- (Optional) Redis (https://redis.io/)
 
 ---
 
@@ -45,19 +46,31 @@ cd ..
 
 Create a `.env` file inside `produkk-api/` (copy the template in `.env.example`).
 
-Tip: set `DATABASE_HOST=localhost` for local development and `DATABASE_HOST=db` when running in Docker. Generate a strong `JWT_SECRET` with:
+Tip: set `NODE_ENV=development` for local development and `NODE_ENV=production` when running in Docker. Generate a strong `JWT_SECRET` with:
 
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
-### 4. Create the database
+### 4. Create the PostgreSQL database
 
-You can use tools like pgAdmin4 or use the Docker PostgreSQL image (the service is already present in docker-compose.yml, so you can use that too)
+You can use tools like pgAdmin4 or use the Docker PostgreSQL image. The **db** service is already present in **docker-compose.yml**, so you can use that too, just run:
+
+```bash
+docker compose up db
+```
 
 The schema is managed by TypeORM and will be auto-created on first run (`synchronize: true` in development).
 
-### 5. Run the project
+### 5. Create the Redis database
+
+You can use tools like RedisInsight or use the Docker Redis image. The **redis** service is already present in **docker-compose.yml**, so you can use that too, just run:
+
+```bash
+docker compose up redis
+```
+
+### 6. Run the project
 
 ```bash
 # From the produkk/ root — starts API and UI concurrently
