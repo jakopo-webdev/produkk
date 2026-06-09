@@ -1,5 +1,4 @@
-const host = (process.env.NODE_ENV && process.env.NODE_ENV.startsWith('prod')) ? 'api' : 'localhost';
-const target = `http://${host}:3009`;
+const target = `http://localhost:3009`;
 
 module.exports = {
   '/auth': {
