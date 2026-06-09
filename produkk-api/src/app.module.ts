@@ -15,7 +15,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
         const nodeEnv = config.get<string>('NODE_ENV') || '';
-        const host = nodeEnv.startsWith('prod') ? 'db' : 'localhost';
+        const host = nodeEnv.startsWith('prod') ? config.get<string>('POSTGRES_HOST') : 'localhost';
         const user = config.get<string>('POSTGRES_USER') || 'username';
         const pass = config.get<string>('POSTGRES_PASSWORD') || 'password';
         const db = config.get<string>('POSTGRES_DB') || 'produkk';
