@@ -36,13 +36,27 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService],
       useFactory: (cfg: ConfigService) => {
         const nodeEnv = cfg.get<string>('NODE_ENV') || '';
-        const host = nodeEnv.startsWith('prod') ? 'redis' : 'localhost';
+        const defaultHost = nodeEnv.startsWith('prod') ? (cfg.get<string>('REDIS_HOST') || 'redis') : 'localhost';
         const port = Number(cfg.get<number>('REDIS_PORT') || 6379);
+        const password = cfg.get<string>('REDIS_PASSWORD');
+        const username = cfg.get<string>('REDIS_USERNAME');
+        const url = `redis://${username}:${password}@${defaultHost}:${port}`;
 
-        return {
+        if (url) {
+          return { type: 'single', url };
+        }
+
+        // prefer explicit username/password; fall back to host/port only
+        const options: any = {
           type: 'single',
-          url: `redis://${host}:${port}`,
+          host: defaultHost,
+          port,
         };
+
+        if (password) options.password = password;
+        if (username) options.username = username;
+
+        return options;
       },
     }),
   ],
