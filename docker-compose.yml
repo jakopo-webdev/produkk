@@ -2,17 +2,14 @@ version: "3.8"
 services:
   db:
     image: postgres:15
-    env_file:
-      - ./produkk-api/.env
     volumes:
       - db-data:/var/lib/postgresql/data
-    # 🔒 Removed ports block for security
+    # 🔒 Removed env_file and ports for security
 
   api:
     build:
       context: ./produkk-api
-    env_file:
-      - ./produkk-api/.env
+    # 🔒 Removed env_file line
     ports:
       - "3009:3009"
     depends_on:
@@ -23,10 +20,7 @@ services:
     build:
       context: ./produkk-ui
       dockerfile: Dockerfile.prod
-    ports:
-      - "80:80"
-    environment:
-      CHOKIDAR_USEPOLLING: "true"
+    # 🌐 Let Railway automatically route public traffic to port 80 (Nginx)
     depends_on:
       - api
     restart: unless-stopped
@@ -34,9 +28,9 @@ services:
   redis:
     image: redis:7-alpine
     restart: unless-stopped
-    # 🔒 Removed ports block for security
     volumes:
       - redis-data:/data
+    # 🔒 Removed ports block
 
 volumes:
   db-data:
