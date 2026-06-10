@@ -15,7 +15,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
         const nodeEnv = config.get<string>('NODE_ENV') || '';
-        const host = nodeEnv.startsWith('prod') ? config.get<string>('POSTGRES_HOST') : 'localhost';
+        const host = (nodeEnv.startsWith('prod') || nodeEnv === 'simulation') ? config.get<string>('POSTGRES_HOST') : 'localhost';
         const user = config.get<string>('POSTGRES_USER') || 'username';
         const pass = config.get<string>('POSTGRES_PASSWORD') || 'password';
         const db = config.get<string>('POSTGRES_DB') || 'produkk';
@@ -36,13 +36,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService],
       useFactory: (cfg: ConfigService) => {
         const nodeEnv = cfg.get<string>('NODE_ENV') || '';
-        const defaultHost = nodeEnv.startsWith('prod') ? (cfg.get<string>('REDIS_HOST') || 'redis') : 'localhost';
+        const defaultHost = (nodeEnv.startsWith('prod') || nodeEnv === 'simulation') ? cfg.get<string>('REDIS_HOST') : 'localhost';
         const port = Number(cfg.get<number>('REDIS_PORT') || 6379);
         const password = cfg.get<string>('REDIS_PASSWORD');
         const username = cfg.get<string>('REDIS_USERNAME');
         const url = `redis://${username}:${password}@${defaultHost}:${port}`;
 
-        if (url) {
+        if (url && (nodeEnv.startsWith('prod') || nodeEnv === 'simulation')) {
           return { type: 'single', url };
         }
 

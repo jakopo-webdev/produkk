@@ -1,36 +1,46 @@
 version: "3.8"
 services:
-  db:
+  postgres.railway.internal:
     image: postgres:15
+    env_file:
+      - ./produkk-api/.env
     volumes:
       - db-data:/var/lib/postgresql/data
-    # 🔒 Removed env_file and ports for security
+    ports:
+      - "5432:5432"
 
-  api:
+  produkk-api.railway.internal:
     build:
       context: ./produkk-api
-    # 🔒 Removed env_file line
+    env_file:
+      - ./produkk-api/.env
     ports:
       - "3009:3009"
     depends_on:
-      - db
+      - postgres.railway.internal
     restart: unless-stopped
 
-  ui:
+  produkk-ui.railway.internal:
     build:
       context: ./produkk-ui
       dockerfile: Dockerfile.prod
-    # 🌐 Let Railway automatically route public traffic to port 80 (Nginx)
+    ports:
+    - "4209:80"
     depends_on:
-      - api
+      - produkk-api.railway.internal
     restart: unless-stopped
 
-  redis:
+  redis.railway.internal:
     image: redis:7-alpine
+    env_file:
+      - ./produkk-api/.env
     restart: unless-stopped
     volumes:
       - redis-data:/data
-    # 🔒 Removed ports block
+    command: > 
+      sh -c "echo \"user default on >$${REDIS_PASSWORD} ~* +@all\" > /data/users.acl && redis-server --aclfile /data/users.acl"
+    ports:
+      - "6379:6379"
 
 volumes:
   db-data:
