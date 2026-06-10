@@ -29,7 +29,7 @@
         }
       </div>
     <!-- Empty State -->
-    } @else if (filteredTasks().length === 0) {
+    } @else if (tasks().length === 0) {
       <div class="flex flex-col items-center justify-center py-20 text-center">
           <div class="w-16 h-16 bg-gray-900 border border-gray-800 rounded-2xl flex items-center justify-center mb-4">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-gray-600" viewBox="0 0 24 24" fill="none"
@@ -39,16 +39,10 @@
             </svg>
           </div>
           <p class="text-gray-300 font-semibold mb-1">
-            @if (filter() === 'all') { No tasks yet }
-            @else if (filter() === 'to-do') { No to-do tasks }
-            @else if (filter() === 'active') { No active tasks }
-            @else { No completed tasks }
+            No tasks yet
           </p>
           <p class="text-gray-600 text-sm">
-            @if (filter() === 'all') { Click "New Task" to get started }
-            @else if (filter() === 'to-do') { Create tasks to get started }
-            @else if (filter() === 'active') { All your active tasks are done — great work! }
-            @else { Complete a task to see it here }
+            Click "New Task" to get started
           </p>
       </div>
     <!-- Task List -->

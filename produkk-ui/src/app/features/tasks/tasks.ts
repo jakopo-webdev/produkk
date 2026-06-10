@@ -6,8 +6,6 @@ import { AuthService } from '../../core/services/auth.service';
 import { Task } from '../../core/models';
 import { NavbarComponent } from '../../layout/navbar/navbar';
 
-type FilterType = 'all' | 'to-do' | 'active' | 'completed';
-
 @Component({
   selector: 'app-tasks',
   standalone: true,
@@ -21,7 +19,6 @@ export class TasksComponent implements OnInit {
 
   tasks = signal<Task[]>([]);
   loading = signal(true);
-  filter = signal<FilterType>('all');
   showModal = signal(false);
   editingTask = signal<Task | null>(null);
   savingTask = signal(false);
@@ -33,26 +30,11 @@ export class TasksComponent implements OnInit {
   statusChangingId = signal<number | null>(null);
   modalError = signal<string | null>(null);
 
-  filteredTasks = computed(() => {
-    const f = this.filter();
-    const all = this.tasks();
-    if (f === 'to-do') return all.filter((t) => t.status === 'to-do');
-    if (f === 'active') return all.filter((t) => t.status === 'active');
-    if (f === 'completed') return all.filter((t) => t.status === 'completed');
-    return all;
-  });
-
   totalCount = computed(() => this.tasks().length);
   todoCount = computed(() => this.tasks().filter((t) => t.status === 'to-do').length);
   activeCount = computed(() => this.tasks().filter((t) => t.status === 'active').length);
   completedCount = computed(() => this.tasks().filter((t) => t.status === 'completed').length);
 
-  readonly filters: { key: FilterType; label: string }[] = [
-    { key: 'all', label: 'All' },
-    { key: 'to-do', label: 'To-do' },
-    { key: 'active', label: 'Active' },
-    { key: 'completed', label: 'Completed' },
-  ];
 
   taskForm = this.fb.nonNullable.group({
     title: ['', Validators.required],
@@ -179,16 +161,6 @@ export class TasksComponent implements OnInit {
       },
       error: () => this.deletingId.set(null),
     });
-  }
-
-  setFilter(f: FilterType) {
-    this.filter.set(f);
-  }
-
-  filterTabClass(key: FilterType): string {
-    return this.filter() === key
-      ? 'bg-gray-700 text-white'
-      : 'text-gray-400 hover:text-gray-200';
   }
 
   formatDate(iso: string): string {
