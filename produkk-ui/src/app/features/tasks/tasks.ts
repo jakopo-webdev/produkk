@@ -1,4 +1,4 @@
-import { Component, signal, computed, inject, OnInit } from '@angular/core';
+import { Component, signal, computed, inject, OnInit, HostListener } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TasksService } from '../../core/services/tasks.service';
@@ -64,6 +64,12 @@ export class TasksComponent implements OnInit {
       this.auth.getProfile().subscribe();
     }
     this.loadTasks();
+  }
+
+  // Close status menu when clicking anywhere in the document
+  @HostListener('document:click')
+  onDocumentClick() {
+    this.statusMenuId.set(null);
   }
 
   loadTasks() {

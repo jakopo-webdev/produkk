@@ -71,7 +71,7 @@
                   </div>
                   <div class="flex items-center gap-4 shrink-0">
                     <div class="relative">
-                      <button (click)="openStatusMenu(task.id)" title="Change status" class="px-3 py-1 rounded-full text-sm bg-amber-500 text-white font-semibold shadow-sm">
+                      <button (click)="$event.stopPropagation(); openStatusMenu(task.id)" title="Change status" class="px-3 py-1 rounded-full text-sm bg-amber-500 text-white font-semibold shadow-sm">
                         {{ task.status }}
                       </button>
                       @if (statusMenuId() === task.id) {
@@ -131,7 +131,7 @@
                   </div>
                   <div class="flex items-center gap-4 shrink-0">
                     <div class="relative">
-                      <button (click)="openStatusMenu(task.id)" title="Change status" class="px-3 py-1 rounded-full text-sm bg-blue-500 text-white font-semibold shadow-sm">
+                      <button (click)="$event.stopPropagation(); openStatusMenu(task.id)" title="Change status" class="px-3 py-1 rounded-full text-sm bg-blue-500 text-white font-semibold shadow-sm">
                         {{ task.status }}
                       </button>
                       @if (statusMenuId() === task.id) {
@@ -190,7 +190,7 @@
                     @if (task.description) { <p class="text-sm text-gray-400 mt-0.5 truncate">{{ task.description }}</p> }                </div>
                   <div class="flex items-center gap-4 shrink-0">
                     <div class="relative">
-                      <button (click)="openStatusMenu(task.id)" title="Change status" class="px-3 py-1 rounded-full text-sm bg-emerald-500 text-white font-semibold shadow-sm">
+                      <button (click)="$event.stopPropagation(); openStatusMenu(task.id)" title="Change status" class="px-3 py-1 rounded-full text-sm bg-emerald-500 text-white font-semibold shadow-sm">
                         {{ task.status }}
                       </button>
                       @if (statusMenuId() === task.id) {
