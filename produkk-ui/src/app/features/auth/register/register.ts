@@ -1,6 +1,6 @@
 import { Component, signal, inject } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../../core/services/auth.service';
 
@@ -15,10 +15,17 @@ export class RegisterComponent {
   private auth = inject(AuthService);
   private router = inject(Router);
 
+  private passwordMatch: ValidatorFn = (group: AbstractControl) => {
+    const pw = group.get('password')?.value;
+    const cpw = group.get('confirmPassword')?.value;
+    return pw === cpw ? null : { mismatch: true };
+  };
+
   form = this.fb.nonNullable.group({
     username: ['', [Validators.required, Validators.minLength(3)]],
     password: ['', [Validators.required, Validators.minLength(8)]],
-  });
+    confirmPassword: ['', [Validators.required, Validators.minLength(8)]],
+  }, { validators: this.passwordMatch });
 
   loading = signal(false);
   error = signal<string | null>(null);
@@ -34,6 +41,7 @@ export class RegisterComponent {
     const { username, password } = this.form.getRawValue();
     this.auth.register(username, password).subscribe({
       next: () => {
+        this.loading.set(false);
         this.success.set(true);
         setTimeout(() => this.router.navigate(['/login']), 1500);
       },
@@ -50,4 +58,5 @@ export class RegisterComponent {
 
   get usernameCtrl() { return this.form.controls.username; }
   get passwordCtrl() { return this.form.controls.password; }
+  get confirmPasswordCtrl() { return this.form.controls.confirmPassword; }
 }
