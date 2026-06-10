@@ -29,6 +29,9 @@ export class TasksComponent implements OnInit {
   // id of task currently being changed via status update
   statusChangingId = signal<number | null>(null);
   modalError = signal<string | null>(null);
+  // delete modal state
+  showDeleteModal = signal(false);
+  deleteTarget = signal<Task | null>(null);
 
   totalCount = computed(() => this.tasks().length);
   todoCount = computed(() => this.tasks().filter((t) => t.status === 'to-do').length);
@@ -180,8 +183,19 @@ export class TasksComponent implements OnInit {
 
   // Confirm then delete
   confirmDelete(task: Task) {
-    const confirmed = confirm(`Delete task "${task.title}"? This cannot be undone.`);
-    if (!confirmed) return;
-    this.deleteTask(task.id);
+    this.deleteTarget.set(task);
+    this.showDeleteModal.set(true);
+  }
+
+  closeDeleteModal() {
+    this.showDeleteModal.set(false);
+    this.deleteTarget.set(null);
+  }
+
+  confirmDeleteConfirmed() {
+    const target = this.deleteTarget();
+    if (!target) return;
+    this.deleteTask(target.id);
+    this.closeDeleteModal();
   }
 }
