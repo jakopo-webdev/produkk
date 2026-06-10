@@ -42,21 +42,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         const username = cfg.get<string>('REDIS_USERNAME');
         const url = `redis://${username}:${password}@${defaultHost}:${port}`;
 
-        if (url && (nodeEnv.startsWith('prod') || nodeEnv === 'simulation')) {
-          return { type: 'single', url };
-        }
-
-        // prefer explicit username/password; fall back to host/port only
-        const options: any = {
-          type: 'single',
-          host: defaultHost,
-          port,
-        };
-
-        if (password) options.password = password;
-        if (username) options.username = username;
-
-        return options;
+        return { type: 'single', url };
       },
     }),
   ],
