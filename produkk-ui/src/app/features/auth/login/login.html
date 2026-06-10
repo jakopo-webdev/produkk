@@ -42,9 +42,9 @@
             [class.border-red-500]="usernameCtrl.invalid && usernameCtrl.touched"
           />
           @if (usernameCtrl.touched && usernameCtrl.errors?.['required']) {
-            <p class="mt-1.5 text-xs text-red-400">Username is required.</p>
+            <p class="mt-1.5 text-xs text-red-400">Username is required</p>
           } @else if (usernameCtrl.touched && usernameCtrl.errors?.['minlength']) {
-            <p class="mt-1.5 text-xs text-red-400">Username must be at least 3 characters.</p>
+            <p class="mt-1.5 text-xs text-red-400">Username must be at least 3 characters</p>
           }
         </div>
 
@@ -60,9 +60,9 @@
             [class.border-red-500]="passwordCtrl.invalid && passwordCtrl.touched"
           />
           @if (passwordCtrl.touched && passwordCtrl.errors?.['required']) {
-            <p class="mt-1.5 text-xs text-red-400">Password is required.</p>
+            <p class="mt-1.5 text-xs text-red-400">Password is required</p>
           } @else if (passwordCtrl.touched && passwordCtrl.errors?.['minlength']) {
-            <p class="mt-1.5 text-xs text-red-400">Password must be at least 8 characters.</p>
+            <p class="mt-1.5 text-xs text-red-400">Password must be at least 8 characters</p>
           }
         </div>
 
