@@ -17,6 +17,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/privacy/privacy').then((m) => m.PrivacyComponent),
   },
   {
+    path: 'cookie-policy',
+    loadComponent: () => import('./features/cookie-policy/cookie-policy').then((m) => m.CookiePolicyComponent),
+  },
+  {
     path: '',
     loadComponent: () => import('./features/tasks/tasks').then((m) => m.TasksComponent),
     canActivate: [authGuard],

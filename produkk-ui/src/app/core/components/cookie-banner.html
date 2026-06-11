@@ -1,0 +1,11 @@
+<div *ngIf="show" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-800 text-gray-100 border border-gray-700 rounded-lg px-4 py-3 max-w-3xl w-full shadow-lg z-50">
+  <div class="flex items-center justify-between gap-4">
+    <div class="text-sm">
+      Questo sito utilizza un cookie tecnico per mantenere la sessione (JWT). È necessario per il funzionamento del servizio. 
+      <a routerLink="/cookie-policy" class="underline text-gray-200 ml-1">Informativa cookie</a>
+    </div>
+    <div>
+      <button (click)="close()" class="bg-gray-700 hover:bg-gray-600 text-sm text-white px-3 py-1.5 rounded">Chiudi</button>
+    </div>
+  </div>
+</div>
