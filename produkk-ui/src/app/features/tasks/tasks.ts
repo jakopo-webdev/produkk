@@ -32,6 +32,9 @@ export class TasksComponent implements OnInit {
   // delete modal state
   showDeleteModal = signal(false);
   deleteTarget = signal<Task | null>(null);
+  // view modal state
+  showViewModal = signal(false);
+  viewTarget = signal<Task | null>(null);
 
   totalCount = computed(() => this.tasks().length);
   todoCount = computed(() => this.tasks().filter((t) => t.status === 'to-do').length);
@@ -178,11 +181,13 @@ export class TasksComponent implements OnInit {
 
   // Called from template when clicking edit icon
   editTask(task: Task) {
+    this.closeViewModal();
     this.openEditModal(task);
   }
 
   // Confirm then delete
   confirmDelete(task: Task) {
+    this.closeViewModal();
     this.deleteTarget.set(task);
     this.showDeleteModal.set(true);
   }
@@ -190,6 +195,16 @@ export class TasksComponent implements OnInit {
   closeDeleteModal() {
     this.showDeleteModal.set(false);
     this.deleteTarget.set(null);
+  }
+
+  openViewModal(task: Task) {
+    this.viewTarget.set(task);
+    this.showViewModal.set(true);
+  }
+
+  closeViewModal() {
+    this.showViewModal.set(false);
+    this.viewTarget.set(null);
   }
 
   confirmDeleteConfirmed() {
