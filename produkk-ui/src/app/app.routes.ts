@@ -21,6 +21,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/cookie-policy/cookie-policy').then((m) => m.CookiePolicyComponent),
   },
   {
+    path: 'processors',
+    loadComponent: () => import('./features/processors/processors').then((m) => m.ProcessorsComponent),
+  },
+  {
     path: '',
     loadComponent: () => import('./features/tasks/tasks').then((m) => m.TasksComponent),
     canActivate: [authGuard],
