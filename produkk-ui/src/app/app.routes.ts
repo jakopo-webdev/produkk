@@ -13,6 +13,10 @@ export const routes: Routes = [
     canActivate: [publicGuard],
   },
   {
+    path: 'privacy',
+    loadComponent: () => import('./features/privacy/privacy').then((m) => m.PrivacyComponent),
+  },
+  {
     path: '',
     loadComponent: () => import('./features/tasks/tasks').then((m) => m.TasksComponent),
     canActivate: [authGuard],
