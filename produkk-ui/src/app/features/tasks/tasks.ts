@@ -43,8 +43,8 @@ export class TasksComponent implements OnInit {
 
 
   taskForm = this.fb.nonNullable.group({
-    title: ['', Validators.required],
-    description: [''],
+    title: ['', [Validators.required, Validators.maxLength(100)]],
+    description: ['', Validators.maxLength(1000)],
   });
 
   ngOnInit() {
