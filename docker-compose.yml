@@ -23,7 +23,7 @@ services:
   produkk-ui.railway.internal:
     build:
       context: ./produkk-ui
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     ports:
     - "4209:80"
     depends_on:
